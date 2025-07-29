@@ -6,11 +6,11 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreateAccount } from '@/hooks/use-create-acconunt';
-import { useNavigate } from 'react-router-dom';
 
 const createAcountSchema = z
   .object({
     email: z.email('Digite o email').nonempty('Este campo não pode ser vazio'),
+    nome: z.string('Digite o nome').nonempty('Este campo não pode ser vazio'),
     senha: z
       .string()
       .min(6, 'A senha deve ter no mínimo 6 caracteres')
@@ -33,8 +33,7 @@ type CreateAccountFormProps = React.ComponentProps<'form'> & {
 };
 
 export function CreateAccountForm({ className, onToggle, ...props }: CreateAccountFormProps) {
-  const { mutateAsync: criarConta, isPending, error } = useCreateAccount();
-  // const navigate = useNavigate();
+  const { mutate: criarConta, isPending, error } = useCreateAccount();
 
   const {
     register,
@@ -44,17 +43,18 @@ export function CreateAccountForm({ className, onToggle, ...props }: CreateAccou
     resolver: zodResolver(createAcountSchema),
   });
 
-  const Submit = async (data: CreateAccountFormData) => {
-    await criarConta(
+  const Submit = (data: CreateAccountFormData) => {
+    criarConta(
       {
         email: data.email,
-        senha: data.senha,
         confirmarSenha: data.confirmarSenha,
+        nome: data.nome,
+        senha: data.senha,
       },
       {
         onSuccess: (data) => {
-          // navigate()
           alert(data.message);
+          console.log(data.message);
         },
       },
     );
@@ -79,11 +79,13 @@ export function CreateAccountForm({ className, onToggle, ...props }: CreateAccou
           {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
         </div>
         <div className="grid gap-3">
+          <Label htmlFor="email">Nome</Label>
+          <Input id="nome" type="text" placeholder="Mauro" {...register('nome')} />
+          {errors.nome && <span className="text-red-500 text-sm">{errors.nome.message}</span>}
+        </div>
+        <div className="grid gap-3">
           <div className="flex items-center">
             <Label htmlFor="password">Senha</Label>
-            {/* <a href="#" className="ml-auto text-sm underline-offset-4 hover:underline">
-              Esqueceu sua senha?
-            </a> */}
           </div>
           <Input id="password" type="password" {...register('senha')} />
           {errors.senha && <span className="text-red-500 text-sm">{errors.senha.message}</span>}
@@ -92,8 +94,10 @@ export function CreateAccountForm({ className, onToggle, ...props }: CreateAccou
           <div className="flex items-center">
             <Label htmlFor="password">Repita a Senha</Label>
           </div>
-          <Input id="password" type="password" {...register('confirmarSenha')} />
-          {errors.senha && <span className="text-red-500 text-sm">{errors.senha.message}</span>}
+          <Input id="password-confirm" type="password" {...register('confirmarSenha')} />
+          {errors.confirmarSenha && (
+            <span className="text-red-500 text-sm">{errors.confirmarSenha.message}</span>
+          )}
         </div>
         <Button type="submit" className="w-full" disabled={isPending}>
           {isPending ? 'Criando...' : 'Criar Conta'}
@@ -105,6 +109,7 @@ export function CreateAccountForm({ className, onToggle, ...props }: CreateAccou
           variant={'link'}
           className="underline underline-offset-4 cursor-pointer"
           onClick={onToggle}
+          type="button"
         >
           Login
         </Button>

@@ -9,7 +9,6 @@ import { useLogin } from '@/hooks/use-login';
 
 const loginSchema = z.object({
   email: z.email('Digite o email').nonempty('Este campo não pode ser vazio'),
-  // email: z.string('Digite o email').nonempty('Este campo não pode ser vazio'),
   senha: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
 });
 
@@ -44,15 +43,6 @@ export function LoginForm({ className, onToggle, ...props }: LoginFormProps) {
       },
     );
   };
-  // const Submit = async (data: LoginFormData) => {
-  //   try {
-  //     const result = await login(data);
-  //     console.log(result.message);
-  //     alert(result.message);
-  //   } catch (err: any) {
-  //     alert(err.response?.data?.message || 'Erro ao fazer login');
-  //   }
-  // };
 
   return (
     <form
@@ -92,6 +82,7 @@ export function LoginForm({ className, onToggle, ...props }: LoginFormProps) {
           variant={'link'}
           className="underline underline-offset-4 cursor-pointer"
           onClick={onToggle}
+          type="button"
         >
           Inscrever-se
         </Button>

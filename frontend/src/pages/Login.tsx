@@ -4,7 +4,7 @@ import { GalleryVerticalEnd } from 'lucide-react';
 import { useState } from 'react';
 
 export const Login = () => {
-  const [CriandoConta, setCriandoConta] = useState(true);
+  const [ExibirLogin, setExibirLogin] = useState(true);
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
@@ -19,10 +19,10 @@ export const Login = () => {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            {CriandoConta == true ? (
-              <LoginForm onToggle={() => setCriandoConta(false)} />
+            {ExibirLogin ? (
+              <LoginForm onToggle={() => setExibirLogin(false)} />
             ) : (
-              <CreateAccountForm onToggle={() => setCriandoConta(true)} />
+              <CreateAccountForm onToggle={() => setExibirLogin(true)} />
             )}
           </div>
         </div>
@@ -30,7 +30,7 @@ export const Login = () => {
       <div className="bg-muted relative hidden lg:block">
         <img
           src="/login-image.png"
-          alt="Image"
+          alt="Tela de login com imagem ilustrativa"
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>
