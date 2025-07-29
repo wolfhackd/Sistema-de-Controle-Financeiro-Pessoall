@@ -53,13 +53,6 @@ export const LoginAccount = async (
       })
       .status(200)
       .send({ message: 'Login realizado com sucesso' });
-
-    // return reply.status(200).send({
-    //   message: 'Login realizado com sucesso',
-    //   accessToken,
-    //   refreshToken,
-    //   usuario: { email: usuario.email, nome: usuario.nome },
-    // });
   } catch (error: any) {
     return reply
       .status(500)

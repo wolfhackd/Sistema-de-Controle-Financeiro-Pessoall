@@ -18,4 +18,4 @@ if (!_env.success) {
   throw new Error('Variáveis de ambiente inválidas ou ausentes');
 }
 
-export const env = _env;
+export const env = _env.data;
