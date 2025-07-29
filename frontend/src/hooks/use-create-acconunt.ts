@@ -2,8 +2,8 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 
 async function createAccount(data: { email: string; senha: string; confirmarSenha: string }) {
-  const response = await axios.post('/api/createAccount', data);
-  return response.data; // Deve conter tokens e informações do usuário
+  const response = await axios.post('http://localhost:3333/createAccount', data);
+  return response.data;
 }
 
 export function useCreateAccount() {

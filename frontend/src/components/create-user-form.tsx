@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreateAccount } from '@/hooks/use-create-acconunt';
-import { da } from 'zod/v4/locales';
+import { useNavigate } from 'react-router-dom';
 
 const createAcountSchema = z
   .object({
@@ -32,9 +32,10 @@ type CreateAccountFormProps = React.ComponentProps<'form'> & {
   onToggle?: () => void;
 };
 
-const { mutate: criarConta, isPending, error } = useCreateAccount();
-
 export function CreateAccountForm({ className, onToggle, ...props }: CreateAccountFormProps) {
+  const { mutateAsync: criarConta, isPending, error } = useCreateAccount();
+  // const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -43,21 +44,18 @@ export function CreateAccountForm({ className, onToggle, ...props }: CreateAccou
     resolver: zodResolver(createAcountSchema),
   });
 
-  const Submit = (data: CreateAccountFormData) => {
-    // console.log('Dados enviados', data);
-
-    // if (data.senha != data.confirmarSenha) {
-    //   setError('confirmarSenha', { message: 'As senhas não coincidem' });
-    // }
-
-    criarConta(
+  const Submit = async (data: CreateAccountFormData) => {
+    await criarConta(
       {
         email: data.email,
         senha: data.senha,
         confirmarSenha: data.confirmarSenha,
       },
       {
-        onSuccess: (data) => {},
+        onSuccess: (data) => {
+          // navigate()
+          alert(data.message);
+        },
       },
     );
   };
@@ -97,8 +95,8 @@ export function CreateAccountForm({ className, onToggle, ...props }: CreateAccou
           <Input id="password" type="password" {...register('confirmarSenha')} />
           {errors.senha && <span className="text-red-500 text-sm">{errors.senha.message}</span>}
         </div>
-        <Button type="submit" className="w-full">
-          Criar Conta
+        <Button type="submit" className="w-full" disabled={isPending}>
+          {isPending ? 'Criando...' : 'Criar Conta'}
         </Button>
       </div>
       <div className="text-center text-sm">

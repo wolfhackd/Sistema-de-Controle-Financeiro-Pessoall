@@ -5,9 +5,11 @@ import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useLogin } from '@/hooks/use-login';
 
 const loginSchema = z.object({
   email: z.email('Digite o email').nonempty('Este campo não pode ser vazio'),
+  // email: z.string('Digite o email').nonempty('Este campo não pode ser vazio'),
   senha: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
 });
 
@@ -18,6 +20,8 @@ type LoginFormProps = React.ComponentProps<'form'> & {
 };
 
 export function LoginForm({ className, onToggle, ...props }: LoginFormProps) {
+  const { mutate: login, isPending, error } = useLogin();
+
   const {
     register,
     handleSubmit,
@@ -27,8 +31,28 @@ export function LoginForm({ className, onToggle, ...props }: LoginFormProps) {
   });
 
   const Submit = (data: LoginFormData) => {
-    console.log('Dados enviados', data);
+    login(
+      {
+        email: data.email,
+        senha: data.senha,
+      },
+      {
+        onSuccess(data) {
+          console.log(data.message);
+          alert(data.message);
+        },
+      },
+    );
   };
+  // const Submit = async (data: LoginFormData) => {
+  //   try {
+  //     const result = await login(data);
+  //     console.log(result.message);
+  //     alert(result.message);
+  //   } catch (err: any) {
+  //     alert(err.response?.data?.message || 'Erro ao fazer login');
+  //   }
+  // };
 
   return (
     <form
@@ -58,8 +82,8 @@ export function LoginForm({ className, onToggle, ...props }: LoginFormProps) {
           <Input id="password" type="password" {...register('senha')} />
           {errors.senha && <span className="text-red-500 text-sm">{errors.senha.message}</span>}
         </div>
-        <Button type="submit" className="w-full">
-          Login
+        <Button type="submit" className="w-full" disabled={isPending}>
+          {isPending ? 'Entrando...' : 'Login'}
         </Button>
       </div>
       <div className="text-center text-sm">
