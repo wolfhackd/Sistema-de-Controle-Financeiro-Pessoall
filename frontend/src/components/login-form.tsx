@@ -19,7 +19,7 @@ type LoginFormProps = React.ComponentProps<'form'> & {
 };
 
 export function LoginForm({ className, onToggle, ...props }: LoginFormProps) {
-  const { mutate: login, isPending, error } = useLogin();
+  const { mutate: login, isPending } = useLogin();
 
   const {
     register,

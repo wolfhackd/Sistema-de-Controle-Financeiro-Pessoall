@@ -33,7 +33,7 @@ type CreateAccountFormProps = React.ComponentProps<'form'> & {
 };
 
 export function CreateAccountForm({ className, onToggle, ...props }: CreateAccountFormProps) {
-  const { mutate: criarConta, isPending, error } = useCreateAccount();
+  const { mutate: criarConta, isPending } = useCreateAccount();
 
   const {
     register,
