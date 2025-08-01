@@ -10,33 +10,35 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { BadgeAlert, BadgeCheck, BadgeX } from 'lucide-react';
+import { BadgeAlert, BadgeCheck, BadgeX, PenBoxIcon, Trash2 } from 'lucide-react';
 
 //badges para usar
 // badge - alert;
 // badge - check;
 // badge - x;
 
-// Tabela de dados anual
-type DadosDoAno = {
-  label: string;
-  value: number;
-};
+// Adicionar sessão de despesas automaticas mensais
 
-const year: DadosDoAno[] = [
-  { label: 'Janeiro', value: 1500 },
-  { label: 'Fevereiro', value: 1200 },
-  { label: 'Março', value: 1350 },
-  { label: 'Abril', value: 1600 },
-  { label: 'Maio', value: 1450 },
-  { label: 'Junho', value: 1700 },
-  { label: 'Julho', value: 1550 },
-  { label: 'Agosto', value: 1650 },
-  { label: 'Setembro', value: 1400 },
-  { label: 'Outubro', value: 1750 },
-  { label: 'Novembro', value: 1600 },
-  { label: 'Dezembro', value: 1800 },
-];
+// Tabela de dados anual
+// type DadosDoAno = {
+//   label: string;
+//   value: number;
+// };
+
+// const year: DadosDoAno[] = [
+//   { label: 'Janeiro', value: 1500 },
+//   { label: 'Fevereiro', value: 1200 },
+//   { label: 'Março', value: 1350 },
+//   { label: 'Abril', value: 1600 },
+//   { label: 'Maio', value: 1450 },
+//   { label: 'Junho', value: 1700 },
+//   { label: 'Julho', value: 1550 },
+//   { label: 'Agosto', value: 1650 },
+//   { label: 'Setembro', value: 1400 },
+//   { label: 'Outubro', value: 1750 },
+//   { label: 'Novembro', value: 1600 },
+//   { label: 'Dezembro', value: 1800 },
+// ];
 
 export const Dashboard = () => {
   return (
@@ -49,12 +51,12 @@ export const Dashboard = () => {
           Adicionar Despesa
         </Button>
       </div>
-      <div className="flex flex-col md:grid md:grid-cols-3">
+      <div className="flex flex-col lg:grid lg:grid-cols-3">
         <div className="col-span-1">
           <h2 className="font-bold text-2xl">Saldo</h2>
           <GraficoLinha />
         </div>
-        <div className="col-span-2">
+        <div className="col-span-2 h-[400px] overflow-y-scroll">
           <h2 className="font-bold text-2xl">Despesas Mensais</h2>
           <Table>
             <TableHeader>
@@ -76,7 +78,21 @@ export const Dashboard = () => {
                 </TableCell>
                 <TableCell className="pl-10">05</TableCell>
                 <TableCell>Outros</TableCell>
-                <TableCell className="text-right">$250.00</TableCell>
+                <TableCell>$250.00</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-3">
+                    <Button title="Editar Item" className="cursor-pointer">
+                      <PenBoxIcon />
+                    </Button>
+                    <Button
+                      variant={'destructive'}
+                      className="cursor-pointer"
+                      title="Deletar Transferência"
+                    >
+                      <Trash2 />
+                    </Button>
+                  </div>
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Água</TableCell>
@@ -87,7 +103,21 @@ export const Dashboard = () => {
                 </TableCell>
                 <TableCell className="pl-10">10</TableCell>
                 <TableCell>Contas e Serviços</TableCell>
-                <TableCell className="text-right">$250.00</TableCell>
+                <TableCell>$250.00</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-3">
+                    <Button title="Editar Item" className="cursor-pointer">
+                      <PenBoxIcon />
+                    </Button>
+                    <Button
+                      variant={'destructive'}
+                      className="cursor-pointer"
+                      title="Deletar Transferência"
+                    >
+                      <Trash2 />
+                    </Button>
+                  </div>
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Energia</TableCell>
@@ -98,10 +128,28 @@ export const Dashboard = () => {
                 </TableCell>
                 <TableCell className="pl-10">15</TableCell>
                 <TableCell>Contas e Serviços</TableCell>
-                <TableCell className="text-right">$250.00</TableCell>
+                <TableCell>$250.00</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-3">
+                    <Button title="Editar Item" className="cursor-pointer">
+                      <PenBoxIcon />
+                    </Button>
+                    <Button
+                      variant={'destructive'}
+                      className="cursor-pointer"
+                      title="Deletar Transferência"
+                    >
+                      <Trash2 />
+                    </Button>
+                  </div>
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>
+        </div>
+        {/* Se houver despesas mensais ficam aqui com um botão de editar ou apagar */}
+        <div>
+          <h1>Despesas Fixas</h1>
         </div>
       </div>
     </div>

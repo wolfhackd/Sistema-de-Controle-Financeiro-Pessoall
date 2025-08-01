@@ -13,7 +13,7 @@ export const Navbar = () => {
           Exportar
         </Button>
         <Button variant={'destructive'} className="cursor-pointer">
-          logout
+          Logout
         </Button>
       </div>
     </div>
