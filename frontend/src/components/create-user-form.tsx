@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCreateAccount } from '@/hooks/use-create-acconunt';
+import { useCreateAccount } from '@/hooks/use-create-account';
 
 const createAcountSchema = z
   .object({

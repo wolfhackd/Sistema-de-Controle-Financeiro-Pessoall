@@ -1,5 +1,6 @@
 import { GraficoLinha } from '@/components/dashboard/LineChart';
 import { Navbar } from '@/components/dashboard/Navbar';
+import { Modal } from '@/components/modal';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,6 +12,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { BadgeAlert, BadgeCheck, BadgeX, PenBoxIcon, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import AdicionarDespesa from '@/components/add-expensive-form';
 
 //badges para usar
 // badge - alert;
@@ -40,14 +43,54 @@ import { BadgeAlert, BadgeCheck, BadgeX, PenBoxIcon, Trash2 } from 'lucide-react
 //   { label: 'Dezembro', value: 1800 },
 // ];
 
+type Data = {
+  nome: string;
+  status: number;
+  mensal: boolean;
+  vencimento: number;
+  categoria: string;
+  valor: number;
+};
+
+const data: Data[] = [
+  {
+    nome: 'Água',
+    status: 1,
+    mensal: false,
+    vencimento: 5,
+    categoria: 'Outros',
+    valor: 250,
+  },
+  {
+    nome: 'Netflix',
+    status: 0,
+    mensal: true,
+    vencimento: 1,
+    categoria: 'Serviços e Assinaturas',
+    valor: 69.99,
+  },
+  {
+    nome: 'Energia',
+    status: 0,
+    mensal: true,
+    vencimento: 20,
+    categoria: 'Contas',
+    valor: 50,
+  },
+];
+
 export const Dashboard = () => {
+  const [ModalAddDespesas, setModalAddDespesas] = useState(false);
+  const dataCompleta = new Date();
+  const dia = dataCompleta.getDate();
+
   return (
     <div className="w-screen p-4 overflow-x-hidden">
       <Navbar />
       {/* Main */}
       <div className="flex justify-center items-center flex-col h-80 gap-10 text-justify md:text-center">
         <h1 className="font-bold text-6xl">Sistema de Controle Financeiro Pessoal</h1>
-        <Button className="cursor-pointer" size={'lg'}>
+        <Button className="cursor-pointer" size={'lg'} onClick={() => setModalAddDespesas(true)}>
           Adicionar Despesa
         </Button>
       </div>
@@ -56,7 +99,7 @@ export const Dashboard = () => {
           <h2 className="font-bold text-2xl">Saldo</h2>
           <GraficoLinha />
         </div>
-        <div className="col-span-2 h-[400px] overflow-y-scroll">
+        <div className="col-span-2 h-[400px] overflow-y-auto">
           <h2 className="font-bold text-2xl">Despesas Mensais</h2>
           <Table>
             <TableHeader>
@@ -69,81 +112,54 @@ export const Dashboard = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell className="font-medium">Netflix</TableCell>
-                <TableCell>
-                  <Badge className="bg-green-400 text-black">
-                    <BadgeCheck />
-                  </Badge>
-                </TableCell>
-                <TableCell className="pl-10">05</TableCell>
-                <TableCell>Outros</TableCell>
-                <TableCell>$250.00</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-3">
-                    <Button title="Editar Item" className="cursor-pointer">
-                      <PenBoxIcon />
-                    </Button>
-                    <Button
-                      variant={'destructive'}
-                      className="cursor-pointer"
-                      title="Deletar Transferência"
-                    >
-                      <Trash2 />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium">Água</TableCell>
-                <TableCell>
-                  <Badge className="bg-yellow-400 text-black">
-                    <BadgeAlert />
-                  </Badge>
-                </TableCell>
-                <TableCell className="pl-10">10</TableCell>
-                <TableCell>Contas e Serviços</TableCell>
-                <TableCell>$250.00</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-3">
-                    <Button title="Editar Item" className="cursor-pointer">
-                      <PenBoxIcon />
-                    </Button>
-                    <Button
-                      variant={'destructive'}
-                      className="cursor-pointer"
-                      title="Deletar Transferência"
-                    >
-                      <Trash2 />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium">Energia</TableCell>
-                <TableCell>
-                  <Badge className="bg-red-400 text-black">
-                    <BadgeX />
-                  </Badge>
-                </TableCell>
-                <TableCell className="pl-10">15</TableCell>
-                <TableCell>Contas e Serviços</TableCell>
-                <TableCell>$250.00</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-3">
-                    <Button title="Editar Item" className="cursor-pointer">
-                      <PenBoxIcon />
-                    </Button>
-                    <Button
-                      variant={'destructive'}
-                      className="cursor-pointer"
-                      title="Deletar Transferência"
-                    >
-                      <Trash2 />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
+              {data.map((despesa) => {
+                return (
+                  // Colocar a key
+                  <TableRow>
+                    <TableCell className="font-medium">{despesa.nome}</TableCell>
+                    <TableCell>
+                      {despesa.status === 1 ? (
+                        <Badge className="bg-green-400 text-black">
+                          <BadgeCheck />
+                        </Badge>
+                      ) : despesa.mensal ? (
+                        dia <= despesa.vencimento ? (
+                          <Badge className="bg-yellow-400 text-black">
+                            <BadgeAlert />
+                          </Badge>
+                        ) : (
+                          <Badge className="bg-red-400 text-black">
+                            <BadgeX />
+                          </Badge>
+                        )
+                      ) : (
+                        <Badge className="bg-red-400 text-black">
+                          <BadgeX />
+                        </Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="pl-10">
+                      {String(despesa.vencimento).padStart(2, '0')}
+                    </TableCell>
+                    <TableCell>{despesa.categoria}</TableCell>
+                    <TableCell>$ {despesa.vencimento.toFixed(2)}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <Button title="Editar Item" className="cursor-pointer">
+                          <PenBoxIcon />
+                        </Button>
+                        <Button
+                          variant={'destructive'}
+                          className="cursor-pointer"
+                          title="Deletar Transferência"
+                        >
+                          <Trash2 />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
@@ -152,6 +168,11 @@ export const Dashboard = () => {
           <h1>Despesas Fixas</h1>
         </div>
       </div>
+      {/* Modal */}
+
+      <Modal isOpen={ModalAddDespesas} onClose={() => setModalAddDespesas(false)}>
+        <AdicionarDespesa />
+      </Modal>
     </div>
   );
 };
