@@ -18,17 +18,18 @@ export const CreateAccount = async (
 ) => {
   try {
     const { email, nome, senha, confirmarSenha } = request.body;
+    if (senha !== confirmarSenha) {
+      return reply.status(400).send({ error: 'As senhas não coincidem' });
+    }
     const UsuarioExiste = await Usuario.findOne({ email });
     if (!UsuarioExiste) {
-      if (senha === confirmarSenha) {
-        const senhaHash = await bcrypt.hash(senha, 10);
-        const novoUsuario = await Usuario.create({
-          email,
-          nome,
-          senha: senhaHash,
-        });
-        return reply.status(201).send(`Usuário criado com sucesso ${novoUsuario}`);
-      }
+      const senhaHash = await bcrypt.hash(senha, 10);
+      const novoUsuario = await Usuario.create({
+        email,
+        nome,
+        senha: senhaHash,
+      });
+      return reply.status(201).send({ message: `Usuário criado com sucesso ${novoUsuario}` });
     }
     throw new Error('Um usuário com esse email já existe');
   } catch (error: any) {
