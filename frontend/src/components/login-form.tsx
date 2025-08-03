@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useLogin } from '@/hooks/use-login';
+import { useNavigate } from 'react-router-dom';
 
 const loginSchema = z.object({
   email: z.email('Digite o email').nonempty('Este campo não pode ser vazio'),
@@ -19,6 +20,7 @@ type LoginFormProps = React.ComponentProps<'form'> & {
 };
 
 export function LoginForm({ className, onToggle, ...props }: LoginFormProps) {
+  const navigate = useNavigate();
   const { mutate: login, isPending } = useLogin();
 
   const {
@@ -36,9 +38,8 @@ export function LoginForm({ className, onToggle, ...props }: LoginFormProps) {
         senha: data.senha,
       },
       {
-        onSuccess(data) {
-          console.log(data.message);
-          alert(data.message);
+        onSuccess() {
+          navigate('/dashboard');
         },
       },
     );

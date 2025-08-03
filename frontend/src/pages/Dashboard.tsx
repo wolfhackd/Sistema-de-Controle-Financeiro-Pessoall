@@ -114,9 +114,10 @@ export const Dashboard = () => {
             <TableBody>
               {data.map((despesa) => {
                 return (
-                  // Colocar a key
                   <TableRow>
-                    <TableCell className="font-medium">{despesa.nome}</TableCell>
+                    <TableCell key={despesa.nome} className="font-medium">
+                      {despesa.nome}
+                    </TableCell>
                     <TableCell>
                       {despesa.status === 1 ? (
                         <Badge className="bg-green-400 text-black">
