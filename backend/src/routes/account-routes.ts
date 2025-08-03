@@ -8,8 +8,6 @@ export const AccountRoute: FastifyPluginCallbackZod = (app) => {
   app.post('/createAccount', { schema: { body: CreateAccountSchema } }, CreateAccount);
   app.post('/login', { schema: { body: LoginAccountSchema } }, LoginAccount);
 
-  // app.addHook('preHandler', AuthMiddleware);
-  // app.post('/logout', Logout);
   app.register((privateRoutes, _, done) => {
     privateRoutes.addHook('preHandler', AuthMiddleware);
 
