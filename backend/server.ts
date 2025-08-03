@@ -1,10 +1,14 @@
+/// <reference path="./src/types/fastify-jwt.d.ts" />
 import fastifyCors from '@fastify/cors';
 import Fastify from 'fastify';
 import { env } from './src/env.ts';
 import { serializerCompiler, validatorCompiler, ZodTypeProvider } from 'fastify-type-provider-zod';
 import mongoose from 'mongoose';
-import { CreateAccountRoute } from './src/routes/account-routes.ts';
+import { AccountRoute } from './src/routes/account-routes.ts';
+import { DashboardRoutes } from './src/routes/dashboard-routes.ts';
+import { meRoutes } from './src/routes/token-routes.ts';
 import fastifyCookie from '@fastify/cookie';
+import fastifyJwt from '@fastify/jwt';
 
 const app = Fastify().withTypeProvider<ZodTypeProvider>();
 app.setValidatorCompiler(validatorCompiler);
@@ -18,12 +22,20 @@ app.register(fastifyCors, {
 
 //Cookies
 app.register(fastifyCookie, {
-  // secret: env.JWT_REFRESH_SECRET,
   parseOptions: {
     path: '/',
     httpOnly: true,
     sameSite: 'strict',
     secure: false, // true em produção
+  },
+});
+
+//JWT
+app.register(fastifyJwt, {
+  secret: env.JWT_SECRET,
+  cookie: {
+    cookieName: 'accessToken',
+    signed: false,
   },
 });
 
@@ -39,7 +51,9 @@ app.get('/health', () => 'OK');
 
 //Essa área será para registro de rotas
 
-app.register(CreateAccountRoute);
+app.register(AccountRoute);
+app.register(DashboardRoutes);
+app.register(meRoutes);
 
 //Init do server
 app.listen(
