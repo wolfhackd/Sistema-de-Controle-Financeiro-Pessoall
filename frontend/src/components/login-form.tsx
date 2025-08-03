@@ -7,6 +7,8 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useLogin } from '@/hooks/use-login';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { useEffect } from 'react';
 
 const loginSchema = z.object({
   email: z.email('Digite o email').nonempty('Este campo não pode ser vazio'),
@@ -41,9 +43,23 @@ export function LoginForm({ className, onToggle, ...props }: LoginFormProps) {
         onSuccess() {
           navigate('/dashboard');
         },
+        onError(error: any) {
+          toast.error(
+            error?.response?.data?.message || 'Não foi possível fazer login. Verifique seus dados.',
+          );
+        },
       },
     );
   };
+
+  useEffect(() => {
+    if (errors.email) {
+      toast.error(errors.email.message as string);
+    }
+    if (errors.senha) {
+      toast.error(errors.senha.message as string);
+    }
+  }, [errors]);
 
   return (
     <form
@@ -61,7 +77,6 @@ export function LoginForm({ className, onToggle, ...props }: LoginFormProps) {
         <div className="grid gap-3">
           <Label htmlFor="email">Email</Label>
           <Input id="email" type="email" placeholder="m@example.com" {...register('email')} />
-          {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
         </div>
         <div className="grid gap-3">
           <div className="flex items-center">
@@ -71,7 +86,6 @@ export function LoginForm({ className, onToggle, ...props }: LoginFormProps) {
             </a>
           </div>
           <Input id="password" type="password" {...register('senha')} />
-          {errors.senha && <span className="text-red-500 text-sm">{errors.senha.message}</span>}
         </div>
         <Button type="submit" className="w-full" disabled={isPending}>
           {isPending ? 'Entrando...' : 'Login'}
