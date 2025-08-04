@@ -7,8 +7,8 @@ const envSchema = z.object({
   PORT: z.string().default('3333').transform(Number),
   ORIGIN: z.string(),
   CONNECTION_STRING_DB: z.string().min(1),
-  JWT_REFRESH_SECRET: z.string().min(1),
-  JWT_SECRET: z.string().min(1),
+  REFRESH_TOKEN: z.string().min(1),
+  ACCESS_TOKEN: z.string().min(1),
 });
 
 const _env = envSchema.safeParse(process.env);

@@ -2,9 +2,9 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 
 export const me = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
-    await request.jwtVerify(); // só valida o token
-    return reply.send({ message: 'Token válido' }); // só confirma que está ok
+    await request.jwtVerify();
+    return reply.status(200).send({ ok: true });
   } catch {
-    return reply.status(401).send({ error: 'Unauthorized' });
+    return reply.status(401).send({ error: 'Não autorizado' });
   }
 };

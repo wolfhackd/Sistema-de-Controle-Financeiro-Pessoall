@@ -32,7 +32,7 @@ app.register(fastifyCookie, {
 
 //JWT
 app.register(fastifyJwt, {
-  secret: env.JWT_SECRET,
+  secret: env.ACCESS_TOKEN,
   cookie: {
     cookieName: 'accessToken',
     signed: false,

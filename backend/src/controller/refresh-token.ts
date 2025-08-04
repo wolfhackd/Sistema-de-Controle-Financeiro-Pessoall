@@ -10,7 +10,7 @@ export async function refreshTokenHandler(request: FastifyRequest, reply: Fastif
       return reply.status(401).send({ message: 'Refresh token ausente' });
     }
 
-    const payload = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET) as { userId: string };
+    const payload = jwt.verify(refreshToken, env.REFRESH_TOKEN) as { userId: string };
 
     const newAccessToken = await reply.jwtSign({ userId: payload.userId }, { expiresIn: '15m' });
 
