@@ -1,13 +1,10 @@
 import { FastifyPluginCallbackZod } from 'fastify-type-provider-zod';
 import { ExpensiveSchema, createExpensive } from '../controller/create-expensive';
 import AuthMiddleware from '../middleware/authMiddleware';
+import { listExpensive, listExpensiveSchema } from '../controller/list-expensives';
 
 export const DashboardRoutes: FastifyPluginCallbackZod = (app) => {
-  // app.addHook('preHandler', AuthMiddleware);
-  app.register((privateRoutes, _, done) => {
-    privateRoutes.addHook('preHandler', AuthMiddleware);
-    privateRoutes.post('/createExpensive', { schema: { body: ExpensiveSchema } }, createExpensive);
-
-    done();
-  });
+  app.addHook('preHandler', AuthMiddleware);
+  app.post('/createExpensive', { schema: { body: ExpensiveSchema } }, createExpensive);
+  app.post('/listExpensive', { schema: { body: listExpensiveSchema } }, listExpensive);
 };

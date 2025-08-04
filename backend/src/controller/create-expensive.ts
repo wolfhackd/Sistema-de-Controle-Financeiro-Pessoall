@@ -2,14 +2,7 @@ import { FastifyReply } from 'fastify/types/reply';
 import { FastifyRequest } from 'fastify/types/request';
 import { z } from 'zod';
 import { Despesa } from '../models/Despesa';
-/*  {
-    nome: 'Água',
-    status: 1,
-    mensal: false,
-    vencimento: 5,
-    categoria: 'Outros',
-    valor: 250,
-  }, */
+
 const date = new Date();
 const day = date.getDate();
 
