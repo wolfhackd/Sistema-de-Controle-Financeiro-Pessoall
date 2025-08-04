@@ -20,7 +20,6 @@ export const ExpensiveSchema = z.object({
   vencimento: z.number().default(day),
   categoria: z.string().nonempty(),
   valor: z.number().default(0.0),
-  // userId: z.string().nonempty(), //É pra usar apenas no model
 });
 
 type ExpensiveType = z.infer<typeof ExpensiveSchema>;
@@ -46,7 +45,6 @@ export const createExpensive = async (
     });
 
     reply.status(201).send({ message: 'Despesa criada com sucesso.' });
-    // reply.status(201).send({ novaDespesa });
   } catch (err) {
     reply.status(400).send({ message: 'Houve um erro' + err });
   }
