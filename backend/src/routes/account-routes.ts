@@ -7,12 +7,11 @@ import { Logout } from '../controller/logout-account';
 export const AccountRoute: FastifyPluginCallbackZod = (app) => {
   app.post('/createAccount', { schema: { body: CreateAccountSchema } }, CreateAccount);
   app.post('/login', { schema: { body: LoginAccountSchema } }, LoginAccount);
+  app.post('/logout', Logout);
 
-  app.register((privateRoutes, _, done) => {
-    privateRoutes.addHook('preHandler', AuthMiddleware);
+  // app.register((privateRoutes, _, done) => {
+  //   privateRoutes.addHook('preHandler', AuthMiddleware);
 
-    privateRoutes.post('/logout', Logout);
-
-    done();
-  });
+  //   done();
+  // });
 };
