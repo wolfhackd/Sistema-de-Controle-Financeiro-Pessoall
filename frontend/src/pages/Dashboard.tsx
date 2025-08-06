@@ -13,7 +13,8 @@ import {
 } from '@/components/ui/table';
 import { BadgeAlert, BadgeCheck, BadgeX, PenBoxIcon, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import AdicionarDespesa from '@/components/add-expensive-form';
+import { CreateExpensiveForm } from '../components/create-expensive-form';
+import { ListExpensives } from '@/components/dashboard/ListExpensives';
 
 //badges para usar
 // badge - alert;
@@ -81,8 +82,8 @@ const data: Data[] = [
 
 export const Dashboard = () => {
   const [ModalAddDespesas, setModalAddDespesas] = useState(false);
-  const dataCompleta = new Date();
-  const dia = dataCompleta.getDate();
+  // const dataCompleta = new Date();
+  // const dia = dataCompleta.getDate();
 
   return (
     <div className="w-screen p-4 overflow-x-hidden">
@@ -99,71 +100,7 @@ export const Dashboard = () => {
           <h2 className="font-bold text-2xl">Saldo</h2>
           <GraficoLinha />
         </div>
-        <div className="col-span-2 h-[400px] overflow-y-auto">
-          <h2 className="font-bold text-2xl">Despesas Mensais</h2>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Vencimento</TableHead>
-                <TableHead>Categoria</TableHead>
-                <TableHead>Valor</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.map((despesa) => {
-                return (
-                  <TableRow>
-                    <TableCell key={despesa.nome} className="font-medium">
-                      {despesa.nome}
-                    </TableCell>
-                    <TableCell>
-                      {despesa.status === 1 ? (
-                        <Badge className="bg-green-400 text-black">
-                          <BadgeCheck />
-                        </Badge>
-                      ) : despesa.mensal ? (
-                        dia <= despesa.vencimento ? (
-                          <Badge className="bg-yellow-400 text-black">
-                            <BadgeAlert />
-                          </Badge>
-                        ) : (
-                          <Badge className="bg-red-400 text-black">
-                            <BadgeX />
-                          </Badge>
-                        )
-                      ) : (
-                        <Badge className="bg-red-400 text-black">
-                          <BadgeX />
-                        </Badge>
-                      )}
-                    </TableCell>
-                    <TableCell className="pl-10">
-                      {String(despesa.vencimento).padStart(2, '0')}
-                    </TableCell>
-                    <TableCell>{despesa.categoria}</TableCell>
-                    <TableCell>$ {despesa.vencimento.toFixed(2)}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Button title="Editar Item" className="cursor-pointer">
-                          <PenBoxIcon />
-                        </Button>
-                        <Button
-                          variant={'destructive'}
-                          className="cursor-pointer"
-                          title="Deletar Transferência"
-                        >
-                          <Trash2 />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </div>
+        <ListExpensives />
         {/* Se houver despesas mensais ficam aqui com um botão de editar ou apagar */}
         <div>
           <h1>Despesas Fixas</h1>
@@ -172,7 +109,7 @@ export const Dashboard = () => {
       {/* Modal */}
 
       <Modal isOpen={ModalAddDespesas} onClose={() => setModalAddDespesas(false)}>
-        <AdicionarDespesa />
+        <CreateExpensiveForm onClose={() => setModalAddDespesas(false)} />
       </Modal>
     </div>
   );

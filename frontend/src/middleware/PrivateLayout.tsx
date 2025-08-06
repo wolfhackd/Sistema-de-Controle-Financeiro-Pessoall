@@ -30,7 +30,5 @@ export function PrivateLayout() {
 
   if (!isAuth) return <Navigate to="/" replace />;
 
-  // Aqui ele renderiza a rota que foi pedida no endereço,
-  // tipo /dashboard, /perfil, /qualquer-rota-protegida
   return <Outlet />;
 }

@@ -63,28 +63,12 @@ export function CreateAccountForm({ className, onToggle, ...props }: CreateAccou
   };
 
   useEffect(() => {
-    if (errors.email) {
-      toast.error(errors.email.message);
-    }
-  }, [errors.email]);
-
-  useEffect(() => {
-    if (errors.nome) {
-      toast.error(errors.nome.message);
-    }
-  }, [errors.nome]);
-
-  useEffect(() => {
-    if (errors.senha) {
-      toast.error(errors.senha.message);
-    }
-  }, [errors.senha]);
-
-  useEffect(() => {
-    if (errors.confirmarSenha) {
-      toast.error(errors.confirmarSenha.message);
-    }
-  }, [errors.confirmarSenha]);
+    Object.values(errors).forEach((error) => {
+      if (error && typeof error.message === 'string') {
+        toast.error(error.message);
+      }
+    });
+  }, [errors]);
 
   return (
     <form
@@ -102,29 +86,22 @@ export function CreateAccountForm({ className, onToggle, ...props }: CreateAccou
         <div className="grid gap-3">
           <Label htmlFor="email">Email</Label>
           <Input id="email" type="email" placeholder="m@example.com" {...register('email')} />
-          {/* {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>} */}
-          {/* {errors.email && toast.error(errors.email.message)} */}
         </div>
         <div className="grid gap-3">
           <Label htmlFor="nome">Nome</Label>
           <Input id="nome" type="text" placeholder="Mauro" {...register('nome')} />
-          {/* {errors.nome && <span className="text-red-500 text-sm">{errors.nome.message}</span>} */}
         </div>
         <div className="grid gap-3">
           <div className="flex items-center">
             <Label htmlFor="password">Senha</Label>
           </div>
           <Input id="password" type="password" {...register('senha')} />
-          {/* {errors.senha && <span className="text-red-500 text-sm">{errors.senha.message}</span>} */}
         </div>
         <div className="grid gap-3">
           <div className="flex items-center">
             <Label htmlFor="password-confirm">Repita a Senha</Label>
           </div>
           <Input id="password-confirm" type="password" {...register('confirmarSenha')} />
-          {/* {errors.confirmarSenha && (
-            <span className="text-red-500 text-sm">{errors.confirmarSenha.message}</span>
-          )} */}
         </div>
         <Button type="submit" className="w-full" disabled={isPending}>
           {isPending ? 'Criando...' : 'Criar Conta'}
