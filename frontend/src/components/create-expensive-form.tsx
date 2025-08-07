@@ -29,11 +29,12 @@ const despesaSchema = z.object({
 
 type Props = {
   onClose?: () => void;
+  onCreate?: () => void;
 };
 
 export type despesaFormType = z.infer<typeof despesaSchema>;
 
-export const CreateExpensiveForm = ({ onClose }: Props) => {
+export const CreateExpensiveForm = ({ onClose, onCreate }: Props) => {
   const dataCompleta = new Date();
   const dia = dataCompleta.getDate();
   const { mutate: criarDespesa, isPending } = usecreateExpensive();
@@ -59,6 +60,7 @@ export const CreateExpensiveForm = ({ onClose }: Props) => {
         reset();
         setTimeout(() => {
           onClose?.();
+          onCreate?.();
         }, 100);
       },
     });

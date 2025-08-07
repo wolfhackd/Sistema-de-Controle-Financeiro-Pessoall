@@ -1,25 +1,11 @@
 import { GraficoLinha } from '@/components/dashboard/LineChart';
 import { Navbar } from '@/components/dashboard/Navbar';
 import { Modal } from '@/components/modal';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { BadgeAlert, BadgeCheck, BadgeX, PenBoxIcon, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CreateExpensiveForm } from '../components/create-expensive-form';
-import { ListExpensives } from '@/components/dashboard/ListExpensives';
-
-//badges para usar
-// badge - alert;
-// badge - check;
-// badge - x;
+import { ListExpensives, type Despesa } from '@/components/dashboard/ListExpensives';
+import { useListExpensives } from '@/hooks/use-list-expensives';
 
 // Adicionar sessão de despesas automaticas mensais
 
@@ -44,46 +30,23 @@ import { ListExpensives } from '@/components/dashboard/ListExpensives';
 //   { label: 'Dezembro', value: 1800 },
 // ];
 
-type Data = {
-  nome: string;
-  status: number;
-  mensal: boolean;
-  vencimento: number;
-  categoria: string;
-  valor: number;
-};
-
-const data: Data[] = [
-  {
-    nome: 'Água',
-    status: 1,
-    mensal: false,
-    vencimento: 5,
-    categoria: 'Outros',
-    valor: 250,
-  },
-  {
-    nome: 'Netflix',
-    status: 0,
-    mensal: true,
-    vencimento: 1,
-    categoria: 'Serviços e Assinaturas',
-    valor: 69.99,
-  },
-  {
-    nome: 'Energia',
-    status: 0,
-    mensal: true,
-    vencimento: 20,
-    categoria: 'Contas',
-    valor: 50,
-  },
-];
-
 export const Dashboard = () => {
   const [ModalAddDespesas, setModalAddDespesas] = useState(false);
-  // const dataCompleta = new Date();
-  // const dia = dataCompleta.getDate();
+  const [despesas, setDespesas] = useState<Despesa[]>([]);
+  const { mutate: ListarDespesas } = useListExpensives();
+
+  const FetchExpensives = () => {
+    ListarDespesas(undefined, {
+      onSuccess: (data) => {
+        setDespesas(data.expensives);
+        console.log(data.expensives);
+      },
+    });
+  };
+
+  useEffect(() => {
+    FetchExpensives();
+  }, []);
 
   return (
     <div className="w-screen p-4 overflow-x-hidden">
@@ -100,8 +63,7 @@ export const Dashboard = () => {
           <h2 className="font-bold text-2xl">Saldo</h2>
           <GraficoLinha />
         </div>
-        <ListExpensives />
-        {/* Se houver despesas mensais ficam aqui com um botão de editar ou apagar */}
+        <ListExpensives data={despesas} onChange={FetchExpensives} />
         <div>
           <h1>Despesas Fixas</h1>
         </div>
@@ -109,7 +71,10 @@ export const Dashboard = () => {
       {/* Modal */}
 
       <Modal isOpen={ModalAddDespesas} onClose={() => setModalAddDespesas(false)}>
-        <CreateExpensiveForm onClose={() => setModalAddDespesas(false)} />
+        <CreateExpensiveForm
+          onClose={() => setModalAddDespesas(false)}
+          onCreate={FetchExpensives}
+        />
       </Modal>
     </div>
   );

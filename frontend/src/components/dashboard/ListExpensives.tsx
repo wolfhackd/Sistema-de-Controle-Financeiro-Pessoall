@@ -1,9 +1,10 @@
-import { useListExpensives } from '@/hooks/use-list-expensives';
 import { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { BadgeCheck, BadgeAlert, BadgeX, PenBoxIcon, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
+import { useDeleteExpensive } from '@/hooks/use-delete-expensive';
+import { toast } from 'sonner';
 
 export interface Despesa {
   _id: string;
@@ -19,21 +20,37 @@ export interface Despesa {
   __v: number;
 }
 
-export const ListExpensives = () => {
+export type DeleteExpensiveForm = {
+  _id: string;
+};
+
+type ListExpensivesProps = {
+  data: Despesa[];
+  onChange?: () => void;
+};
+
+export const ListExpensives = ({ data, onChange }: ListExpensivesProps) => {
   const [despesas, setDespesas] = useState<Despesa[]>([]);
   const dataCompleta = new Date();
   const dia = dataCompleta.getDate();
 
-  const { mutate: ListarDespesas } = useListExpensives();
+  const { mutate: DeletarDespesas } = useDeleteExpensive();
 
   useEffect(() => {
-    ListarDespesas(undefined, {
-      onSuccess: (data) => {
-        setDespesas(data.expensives);
-        console.log(data.expensives);
+    setDespesas(data);
+  }, [data]);
+
+  const handleDelete = ({ _id }: DeleteExpensiveForm) => {
+    DeletarDespesas(
+      { _id },
+      {
+        onSuccess: () => {
+          toast.success('Despesa deletada com sucesso');
+          onChange?.(); // chama o callback do pai se existir
+        },
       },
-    });
-  }, []);
+    );
+  };
 
   return (
     <div className="col-span-2 h-[400px] overflow-y-auto">
@@ -86,6 +103,7 @@ export const ListExpensives = () => {
                     variant="destructive"
                     className="cursor-pointer"
                     title="Deletar Transferência"
+                    onClick={() => handleDelete({ _id: despesa._id })}
                   >
                     <Trash2 />
                   </Button>
@@ -105,4 +123,3 @@ export const ListExpensives = () => {
     </div>
   );
 };
-// <p>Ola</p>
